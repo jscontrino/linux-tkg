@@ -59,7 +59,7 @@ else
 fi
 pkgname=("${pkgbase}" "${pkgbase}-headers")
 pkgver="${_basekernel}"."${_sub}"
-pkgrel=264
+pkgrel=266
 pkgdesc='Linux-tkg'
 arch=('x86_64') # no i686 in here
 url="https://www.kernel.org/"
@@ -101,7 +101,7 @@ case $_basever in
         	0012-misc-additions.patch
 	)
 	sha256sums=('bf338980b1670bca287f9994b7441c2361907635879169c64ae78364efc5f491'
-            'd55910209e5f601d023183bcd77c28fa03bb4a7a52d64b325fb0a958c6959c45'
+            '8a72c8e2ca6f3c5c26dc37f2b53534b78a612a9105228919757dd9189255222b'
             'c6d78ceb7ef7251b24baa4aac6dce6bb275ac5639785f9dcd4345a8c4fd44c2a'
             '1f4a20d6eaaa0d969af93152a65191492400c6aa838fc1c290b0dd29bb6019d8'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
@@ -307,7 +307,7 @@ case $_basever in
         0012-misc-additions.patch
     )
     sha256sums=('dcdf99e43e98330d925016985bfbc7b83c66d367b714b2de0cbbfcbf83d8ca43'
-            'b0391f5e9f59c2cfe5ed3cc25f7073bb1ebf5ef44b95e84047d0db00a6f98d1d'
+            '019b136e496a1d5f6fcba3ee504b0ca2bbc72930f44c72bfc2c7ac582cd7c702'
             '002c831305356a6ebc97b2a336ddba8f003ec6c6289ecfddb7ae5a10980565e7'
             'eb1da1a028a1c967222b5bdac1db2b2c4d8285bafd714892f6fc821c10416341'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
@@ -610,7 +610,7 @@ case $_basever in
         0002-mm-Support-soft-dirty-flag-read-with-reset.patch
     )
     sha256sums=('57b2cf6991910e3b67a1b3490022e8a0674b6965c74c12da1e99d138d1991ee8'
-            '26df6175f7ac5407db1644217ce41e6f6d7260e5d436e2b3859d6edbb251c4b6'
+            'd53ba7438f77e5a95a4c2766844d39c0854aac86d186f2ee245149df4dc421a6'
             'c1769805052e92d7741c609167438b782cb4832870c2b0e07899300f4b8f23c9'
             '6e3ef6bc4779ae3b7154642147d5ab3ece6e38e3e08bdb30f86d89d2b4855fa9'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
@@ -762,6 +762,7 @@ case $_basever in
         0009-glitched-ondemand-bmq.patch
         0009-glitched-bmq.patch
         0009-prjc_v5.18-r2.patch
+        0010-lru_5.18.patch
         #0012-linux-hardened.patch
         0012-misc-additions.patch
         # MM Dirty Soft for WRITE_WATCH support in Wine
@@ -769,8 +770,8 @@ case $_basever in
         0002-mm-Support-soft-dirty-flag-read-with-reset.patch
     )
     sha256sums=('51f3f1684a896e797182a0907299cc1f0ff5e5b51dd9a55478ae63a409855cee'
-            'cefa48de438430b42f77c7f134f873c65fe2c7ea69c70188409986bceee49e40'
-            '382aa201a6a6939210dd8668ab052724547b4bd489b38e97502bbd0848061b35'
+            'c5fa763f04fb1efc773f4790d24378a4c445fd1dbf8cf58ad4268583f7ef6160'
+            '6f0fd44dd87dd0ad23f782a26752bb7200d0d163e3a50df6ad3cf5cec7fe948e'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
             '66a03c246037451a77b4d448565b1d7e9368270c7d02872fbd0b5d024ed0a997'
             'f6383abef027fd9a430fd33415355e0df492cdc3c90e9938bf2d98f4f63b32e6'
@@ -782,10 +783,11 @@ case $_basever in
             '19661ec0d39f9663452b34433214c755179894528bf73a42f6ba52ccf572832a'
             '9df628fd530950e37d31da854cb314d536f33c83935adf5c47e71266a55f7004'
             '057631ecc148b41e0037d200a69cbbfbed8cdcf27eede3d8cd6936566b6ebc68'
-            '86aab236478c138b2e88d64b84edf550bafbc4e06ab330ce0ffa7f2a9f5bab85'
+            '12a241794cab82b851a11f4f5aea1e96e75d998935ed5f723040bed543eb9359'
             '9fad4a40449e09522899955762c8928ae17f4cdaa16e01239fd12592e9d58177'
             'a557b342111849a5f920bbe1c129f3ff1fc1eff62c6bd6685e0972fc88e39911'
             'bb8a2daf56a513701895f67dc0e6cbde153481fcd0557906af45523d24aa9f76'
+            '55f633da855b9346bfcfc5204f109eca6d0d7532ad42dec131ea0d64a0d4fd08'
             '428517fbcb161a640b53782000c16f797c2ad27cf2758e7e56133fc62d2d113b'
             '1b656ad96004f27e9dc63d7f430b50d5c48510d6d4cd595a81c24b21adb70313'
             'b0319a7dff9c48b2f3e3d3597ee154bf92223149a633a8b7ce4026252db86da6')
@@ -804,23 +806,24 @@ case $_basever in
         0003-glitched-base.patch
         0003-glitched-cfs.patch
         0003-glitched-cfs-additions.patch
-         #0005-glitched-pds.patch
+        0005-glitched-pds.patch
         0006-add-acs-overrides_iommu.patch
         0007-v5.19-fsync1_via_futex_waitv.patch
         0007-v5.19-winesync.patch
-        #0008-5.14-bcachefs.patch
-         #0009-glitched-ondemand-bmq.patch
-         #0009-glitched-bmq.patch
-         #0009-prjc_v5.19-r0.patch
+        0008-5.19-bcachefs.patch
+        0009-glitched-ondemand-bmq.patch
+        0009-glitched-bmq.patch
+        0009-prjc_v5.19-r0.patch
+        0010-lru_5.19.patch
         #0012-linux-hardened.patch
         0012-misc-additions.patch
         # MM Dirty Soft for WRITE_WATCH support in Wine
         0001-mm-Support-soft-dirty-flag-reset-for-VA-range.patch
         0002-mm-Support-soft-dirty-flag-read-with-reset.patch
     )
-    sha256sums=('4589a4237cb3d17061a0c940fd44e1c87796794eda64fe729c4e916c9d30c579'
+    sha256sums=('ff240c579b9ee1affc318917de07394fc1c3bb49dac25ec1287370c2e15005a8'
             #upcoming_kernel_patch_sha256
-            'ee95b05689889df4f4e885681b29bd3d59277cf43327f2eb7cea14e82e5b15fe'
+            '4b2c3146097d8f249eff251bc26732a1827b4c6918ec61e5d22dd8214d3d0275'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
             '66a03c246037451a77b4d448565b1d7e9368270c7d02872fbd0b5d024ed0a997'
             'f6383abef027fd9a430fd33415355e0df492cdc3c90e9938bf2d98f4f63b32e6'
@@ -828,13 +831,15 @@ case $_basever in
             '391bf85333326c8c7052dcbcf9b247632b728572ce9cf9ef86ae8352dee7d3e2'
             '5efd40c392ece498d2d43d5443e6537c2d9ef7cf9820d5ce80b6577fc5d1a4b2'
             'e5ea0bb25ee294c655ac3cc30e1eea497799826108fbfb4ef3258c676c1e8a12'
-             #'fca63d15ca4502aebd73e76d7499b243d2c03db71ff5ab0bf5cf268b2e576320'
+            'fca63d15ca4502aebd73e76d7499b243d2c03db71ff5ab0bf5cf268b2e576320'
             '19661ec0d39f9663452b34433214c755179894528bf73a42f6ba52ccf572832a'
             '9df628fd530950e37d31da854cb314d536f33c83935adf5c47e71266a55f7004'
             '057631ecc148b41e0037d200a69cbbfbed8cdcf27eede3d8cd6936566b6ebc68'
-             #'9fad4a40449e09522899955762c8928ae17f4cdaa16e01239fd12592e9d58177'
-             #'a557b342111849a5f920bbe1c129f3ff1fc1eff62c6bd6685e0972fc88e39911'
-             #'766658d5ec9cf204635f735a8927854991d0133b2e34bdcd9ca36d7e34817e27'
+            '40e7ecc52af379df1e362b32e5b9827815284dae895328556336cb0d10979b63'
+            '9fad4a40449e09522899955762c8928ae17f4cdaa16e01239fd12592e9d58177'
+            'a557b342111849a5f920bbe1c129f3ff1fc1eff62c6bd6685e0972fc88e39911'
+            'b9822a7f912a46196facb9e70229b90357fbc7c7c1dfe23a407e1cb014add30d'
+            '970819d5a6eca65b9eeb7c459a8bd487600a10b2b02fed323f7456f483c7d5ce'
             '213ecf1ba59dc87ed1844c3473d575b85ffe3a567f86735e8c6239c92dbbb493'
             '1b656ad96004f27e9dc63d7f430b50d5c48510d6d4cd595a81c24b21adb70313'
             'b0319a7dff9c48b2f3e3d3597ee154bf92223149a633a8b7ce4026252db86da6')

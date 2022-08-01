@@ -8,20 +8,20 @@ _eol_kernels=("5.17" "5.16" "5.14" "5.13" "5.12" "5.11" "5.9" "5.8" "5.7")
 
 typeset -Ag _kver_subver_map
 _kver_subver_map=(
-  ["5.4"]="206"
+  ["5.4"]="208"
   ["5.7"]="19"
   ["5.8"]="18"
   ["5.9"]="16"
-  ["5.10"]="131"
+  ["5.10"]="134"
   ["5.11"]="22"
   ["5.12"]="19"
   ["5.13"]="19"
   ["5.14"]="21"
-  ["5.15"]="55"
+  ["5.15"]="58"
   ["5.16"]="20"
   ["5.17"]="15"
-  ["5.18"]="12"
-  ["5.19"]="rc6"
+  ["5.18"]="15"
+  ["5.19"]="0"
 )
 
 # PREEMPT_RT's supported kernel subversion
@@ -202,7 +202,7 @@ _set_cpu_scheduler() {
   elif [ "$_basever" = "518" ]; then
     _avail_cpu_scheds=("pds" "bmq" "cacule" "tt" "cfs")
   elif [ "$_basever" = "519" ]; then
-    _avail_cpu_scheds=("tt" "cfs")
+    _avail_cpu_scheds=("pds" "bmq" "cacule" "tt" "cfs" )
   else
     _avail_cpu_scheds=("cfs")
   fi
@@ -619,7 +619,7 @@ _tkg_srcprep() {
     if [ "${_distro}" = "Void" ]; then
       if [[ $_basever = 515 ]]; then
         curl "https://raw.githubusercontent.com/ptr1337/kernel-patches/master/${_basekernel}/TT/0001-tt-r3.patch" > "$wrksrc"/tt.patch 
-      elif [[ $_basever = 517 ]]; then
+      elif [[ $_basever = 517 ]] || [[ $_basever = 519 ]]; then
         curl "https://raw.githubusercontent.com/ptr1337/kernel-patches/master/${_basekernel}/sched/0001-tt.patch" > "$wrksrc"/tt.patch
       else
         curl "https://raw.githubusercontent.com/ptr1337/kernel-patches/master/${_basekernel}/sched/0001-tt-${_basekernel}.patch" > "$wrksrc"/tt.patch
@@ -628,7 +628,7 @@ _tkg_srcprep() {
     else
       if [[ $_basever = 515 ]]; then
          curl "https://raw.githubusercontent.com/ptr1337/kernel-patches/master/${_basekernel}/TT/0001-tt-r3.patch" > "$srcdir"/tt.patch
-      elif [[ $_basever = 517 ]]; then
+      elif [[ $_basever = 517 ]] || [[ $_basever = 519 ]]; then
          curl "https://raw.githubusercontent.com/ptr1337/kernel-patches/master/${_basekernel}/sched/0001-tt.patch" > "$srcdir"/tt.patch
       else
          curl "https://raw.githubusercontent.com/ptr1337/kernel-patches/master/${_basekernel}/sched/0001-tt-${_basekernel}.patch" > "$srcdir"/tt.patch
@@ -1170,6 +1170,7 @@ _tkg_srcprep() {
        plain ""
        plain "Add Bcache filesystem support? You'll have to install bcachefs-tools-git from AUR for utilities."
        plain "https://bcachefs.org/"
+       warning "Enabling this option will not allow you to enable MGLRU."
        read -rp "`echo $'    > N/y : '`" CONDITION8;
     fi
     if [[ "$CONDITION8" =~ [yY] ]] || [ "$_bcachefs" = "true" ]; then
@@ -1177,7 +1178,25 @@ _tkg_srcprep() {
        _tkg_patcher
 
        _enable "BCACHEFS_FS" "BCACHEFS_QUOTA" "BCACHEFS_POSIX_ACL"
-       _disable "BCACHEFS_DEBUG" "BCACHEFS_TESTS" "DEBUG_CLOSURES"
+       _disable "BCACHEFS_DEBUG" "BCACHEFS_TESTS" "DEBUG_CLOSURES" "BCACHEFS_LOCK_TIME_STATS"
+    fi
+  fi
+
+  # MGLRU
+  tkgpatch="$srcdir/0010-lru_${_basekernel}.patch"
+  if [ -e "$tkgpatch" ] && [ "$_bcachefs" != "true" ] && [[ ! "$CONDITION8" =~ [yY] ]]; then
+    if [ -z "$_mglru" ]; then
+       plain ""
+       plain "Add multi-generational LRU framework support (improving memory pressure handling)? "
+       plain "https://lore.kernel.org/lkml/20220706220022.968789-1-yuzhao@google.com/"
+       read -rp "`echo $'    > N/y : '`" CONDITION_mglru;
+    fi
+    if [[ "$CONDITION_mglru" =~ [yY] ]] || [ "$_mglru" = "true" ]; then
+       _msg="Patching MGLRU in"
+       _tkg_patcher
+
+       _enable "LRU_GEN" "LRU_GEN_ENABLED"
+       _disable "LRU_GEN_STATS"
     fi
   fi
 
