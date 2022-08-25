@@ -59,7 +59,7 @@ else
 fi
 pkgname=("${pkgbase}" "${pkgbase}-headers")
 pkgver="${_basekernel}"."${_sub}"
-pkgrel=268
+pkgrel=269
 pkgdesc='Linux-tkg'
 arch=('x86_64') # no i686 in here
 url="https://www.kernel.org/"
@@ -307,7 +307,7 @@ case $_basever in
         0012-misc-additions.patch
     )
     sha256sums=('dcdf99e43e98330d925016985bfbc7b83c66d367b714b2de0cbbfcbf83d8ca43'
-            'edbe63345082cb4042389acaef0c880b43c0c4dc8c8c8a281a34ae68c093571d'
+            '048ff86031eaeb8ca5aac02eba8d3237af72b2b23f992339a5d3c9b7262e954d'
             'd4de0b21bded28eba4826640397f5ef1d6d1c72c4671d9d0f6861ed6b8c6c026'
             'eb1da1a028a1c967222b5bdac1db2b2c4d8285bafd714892f6fc821c10416341'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
@@ -610,8 +610,8 @@ case $_basever in
         0002-mm-Support-soft-dirty-flag-read-with-reset.patch
     )
     sha256sums=('57b2cf6991910e3b67a1b3490022e8a0674b6965c74c12da1e99d138d1991ee8'
-            'ebc9a8b999bad467b438208fd52b6033de7a90ee341e25415094c08e55b507cf'
-            '308b9e8802e16a55e036a005ad1978c9f31f796f5dd6c086378f56b9f96d43ca'
+            '02add19d91fdaabeff8c2ea9079b18a4ff01325f7a2e382c5befe5afab357342'
+            'd77f79b817bd0ac79bd2f5a929734236a4745534d7757ddf874719932bd24957'
             '6e3ef6bc4779ae3b7154642147d5ab3ece6e38e3e08bdb30f86d89d2b4855fa9'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
             '66a03c246037451a77b4d448565b1d7e9368270c7d02872fbd0b5d024ed0a997'
@@ -770,8 +770,8 @@ case $_basever in
         0002-mm-Support-soft-dirty-flag-read-with-reset.patch
     )
     sha256sums=('51f3f1684a896e797182a0907299cc1f0ff5e5b51dd9a55478ae63a409855cee'
-            'd04aa4d01cb5051f7f1e619b6ca7c8e1da4f097334f3f43477848a1a1fd96a00'
-            '6f0fd44dd87dd0ad23f782a26752bb7200d0d163e3a50df6ad3cf5cec7fe948e'
+            'e158d40d8dbebc6bd11002122b8cd56e16576951ab0e0ef329994a378f63ad8a'
+            '04a8186c95f5abc9febd168c68ff078907a24e9634c811319961c81cc8602c2c'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
             '66a03c246037451a77b4d448565b1d7e9368270c7d02872fbd0b5d024ed0a997'
             'f6383abef027fd9a430fd33415355e0df492cdc3c90e9938bf2d98f4f63b32e6'
@@ -786,7 +786,7 @@ case $_basever in
             '12a241794cab82b851a11f4f5aea1e96e75d998935ed5f723040bed543eb9359'
             '9fad4a40449e09522899955762c8928ae17f4cdaa16e01239fd12592e9d58177'
             'a557b342111849a5f920bbe1c129f3ff1fc1eff62c6bd6685e0972fc88e39911'
-            'bb8a2daf56a513701895f67dc0e6cbde153481fcd0557906af45523d24aa9f76'
+            '7f6b631bb02714904c3715e0f1c0d558e32b06d7a533e269276fb80777356623'
             '55f633da855b9346bfcfc5204f109eca6d0d7532ad42dec131ea0d64a0d4fd08'
             '428517fbcb161a640b53782000c16f797c2ad27cf2758e7e56133fc62d2d113b'
             '1b656ad96004f27e9dc63d7f430b50d5c48510d6d4cd595a81c24b21adb70313'
@@ -822,8 +822,8 @@ case $_basever in
         0002-mm-Support-soft-dirty-flag-read-with-reset.patch
     )
     sha256sums=('ff240c579b9ee1affc318917de07394fc1c3bb49dac25ec1287370c2e15005a8'
-            'e3b9167a3286441f843220bc3339f7bafc256ec4e7b5a080badca6ce8b6c7926'
-            'ea77dc152e52065bd760956800c9dffa5f4600429c7a94c3f12d73abd34aa408'
+            '1efe739578e5221a87cd17d0d40a5e073332cdc559e293fab030469d023d9a7c'
+            'f170eda023a56db8cdcad4b83da5911b7b919bbd25084f729d37f1e6142557ca'
             '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
             '66a03c246037451a77b4d448565b1d7e9368270c7d02872fbd0b5d024ed0a997'
             'f6383abef027fd9a430fd33415355e0df492cdc3c90e9938bf2d98f4f63b32e6'
@@ -838,8 +838,60 @@ case $_basever in
             '829631f803f11579972aa19f3f7f2ae11b0e380c01745a05776dd02b8e6c8855'
             '9fad4a40449e09522899955762c8928ae17f4cdaa16e01239fd12592e9d58177'
             'a557b342111849a5f920bbe1c129f3ff1fc1eff62c6bd6685e0972fc88e39911'
-            '6592ae4cadf0cfddd63fa77416a07131a926d3426df351c41490f361fc56495b'
+            'fbf28a5bcf0ce0443ac2a621796ff2c2b1ade06b263d8f01356fae9a3035c585'
             '970819d5a6eca65b9eeb7c459a8bd487600a10b2b02fed323f7456f483c7d5ce'
+            '213ecf1ba59dc87ed1844c3473d575b85ffe3a567f86735e8c6239c92dbbb493'
+            '1b656ad96004f27e9dc63d7f430b50d5c48510d6d4cd595a81c24b21adb70313'
+            'b0319a7dff9c48b2f3e3d3597ee154bf92223149a633a8b7ce4026252db86da6')
+	;;
+	60)
+    source=("$kernel_site"
+        #"$patch_site"
+        'config.x86_64' # stock Arch config
+        #'config_hardened.x86_64' # hardened Arch config
+        90-cleanup.hook
+        cleanup
+        # ARCH Patches
+        0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
+        # TkG
+        0002-clear-patches.patch
+        0003-glitched-base.patch
+        0003-glitched-cfs.patch
+        0003-glitched-cfs-additions.patch
+        #0005-glitched-pds.patch
+        0006-add-acs-overrides_iommu.patch
+        0007-v6.0-fsync1_via_futex_waitv.patch
+        0007-v6.0-winesync.patch
+        #0008-6.0-bcachefs.patch
+        #0009-glitched-ondemand-bmq.patch
+        #0009-glitched-bmq.patch
+        #0009-prjc_v6.0-r0.patch
+        0010-lru_6.0.patch
+        #0012-linux-hardened.patch
+        0012-misc-additions.patch
+        # MM Dirty Soft for WRITE_WATCH support in Wine
+        0001-mm-Support-soft-dirty-flag-reset-for-VA-range.patch
+        0002-mm-Support-soft-dirty-flag-read-with-reset.patch
+    )
+    sha256sums=('529d24f9bef65074ff1b6e8d703981b3dbc0c328b3ba3112abca55b4da27dd81'
+            #upcoming_kernel_patch_sha256
+            '69cba79d1ba049459d4fb2e0494320fef82d4ecbaca2e0959d09d1e50e69f003'
+            '1e15fc2ef3fa770217ecc63a220e5df2ddbcf3295eb4a021171e7edd4c6cc898'
+            '66a03c246037451a77b4d448565b1d7e9368270c7d02872fbd0b5d024ed0a997'
+            'f6383abef027fd9a430fd33415355e0df492cdc3c90e9938bf2d98f4f63b32e6'
+            '35a7cde86fb94939c0f25a62b8c47f3de0dbd3c65f876f460b263181b3e92fc0'
+            '184eb7f886c38f1259dec62d4267a19f43d6b51165055743d3339348a7d9c58c'
+            '5efd40c392ece498d2d43d5443e6537c2d9ef7cf9820d5ce80b6577fc5d1a4b2'
+            'e5ea0bb25ee294c655ac3cc30e1eea497799826108fbfb4ef3258c676c1e8a12'
+            #'fca63d15ca4502aebd73e76d7499b243d2c03db71ff5ab0bf5cf268b2e576320'
+            '19661ec0d39f9663452b34433214c755179894528bf73a42f6ba52ccf572832a'
+            '9df628fd530950e37d31da854cb314d536f33c83935adf5c47e71266a55f7004'
+            'd2255d8f60d90d1c1d76ab7808d4a04844b6a1b3c83390ac44de0e4b721c3577'
+            #'829631f803f11579972aa19f3f7f2ae11b0e380c01745a05776dd02b8e6c8855'
+            #'9fad4a40449e09522899955762c8928ae17f4cdaa16e01239fd12592e9d58177'
+            #'a557b342111849a5f920bbe1c129f3ff1fc1eff62c6bd6685e0972fc88e39911'
+            #'b046cd6bff73c0210465f4ff0879d99c54fc1413f1c2e8e5298439e4067ac60a'
+            '2ab9ea2d3ef43cfb5cf680ee2262f5671fd5ea980921f33abf2208f9892e9009'
             '213ecf1ba59dc87ed1844c3473d575b85ffe3a567f86735e8c6239c92dbbb493'
             '1b656ad96004f27e9dc63d7f430b50d5c48510d6d4cd595a81c24b21adb70313'
             'b0319a7dff9c48b2f3e3d3597ee154bf92223149a633a8b7ce4026252db86da6')
@@ -988,7 +1040,7 @@ hackheaders() {
   mkdir -p "$builddir"/{fs/xfs,mm}
 
   # add resolve_btfids on 5.16+
-  if [ $_basever -ge 516 ]; then
+  if [[ $_basever = 6* ]] || [ $_basever -ge 516 ]; then
     install -Dt "$builddir"/tools/bpf/resolve_btfids tools/bpf/resolve_btfids/resolve_btfids || ( warning "$builddir/tools/bpf/resolve_btfids was not found. This is undesirable and might break dkms modules !!! Please review your config changes and consider using the provided defconfig and tweaks without further modification." && read -rp "Press enter to continue anyway" )
   fi
 
