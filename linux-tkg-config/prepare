@@ -8,21 +8,21 @@ _eol_kernels=("5.17" "5.16" "5.14" "5.13" "5.12" "5.11" "5.9" "5.8" "5.7")
 
 typeset -Ag _kver_subver_map
 _kver_subver_map=(
-  ["5.4"]="211"
+  ["5.4"]="212"
   ["5.7"]="19"
   ["5.8"]="18"
   ["5.9"]="16"
-  ["5.10"]="139"
+  ["5.10"]="142"
   ["5.11"]="22"
   ["5.12"]="19"
   ["5.13"]="19"
   ["5.14"]="21"
-  ["5.15"]="63"
+  ["5.15"]="67"
   ["5.16"]="20"
   ["5.17"]="15"
   ["5.18"]="19"
-  ["5.19"]="5"
-  ["6.0"]="rc3"
+  ["5.19"]="8"
+  ["6.0"]="rc4"
 )
 
 # PREEMPT_RT's supported kernel subversion
@@ -175,6 +175,7 @@ _set_cpu_scheduler() {
     ["upds"]="Undead PDS (TkG)"
     ["cacule"]="CacULE"
     ["tt"]="TT (TaskType)"
+    ["bore"]="BORE (Burst-Oriented Response Enhancer) CPU Scheduler"
   )
 
   # CPU SCHED selector
@@ -199,11 +200,13 @@ _set_cpu_scheduler() {
   elif [ "$_basever" = "516" ]; then
     _avail_cpu_scheds=("pds" "bmq" "cacule" "cfs")
   elif [ "$_basever" = "517" ]; then
-    _avail_cpu_scheds=("pds" "bmq" "cacule" "tt" "cfs")
+    _avail_cpu_scheds=("pds" "bmq" "cacule" "tt" "cfs" "bore")
   elif [ "$_basever" = "518" ]; then
-    _avail_cpu_scheds=("cfs" "pds" "bmq" "cacule" "tt")
+    _avail_cpu_scheds=("cfs" "pds" "bmq" "cacule" "tt" "bore")
   elif [ "$_basever" = "519" ]; then
-    _avail_cpu_scheds=("cfs" "pds" "bmq" "cacule" "tt")
+    _avail_cpu_scheds=("cfs" "pds" "bmq" "cacule" "tt" "bore")
+  elif [ "$_basever" = "60" ]; then
+    _avail_cpu_scheds=("cfs" "bore")
   else
     _avail_cpu_scheds=("cfs")
   fi
@@ -261,7 +264,7 @@ _set_compiler(){
   if [ "$_compiler" = "llvm" ]; then
     _compiler_name="-llvm"
     llvm_opt="LLVM=1 LLVM_IAS=${_llvm_ias:-0}"
-    if [ $_basever -ge 512 ]; then
+    if [[ "$_basever" = 6* ]] || ( [[ "$_basever" = 5* ]] && [ $_basever -ge 512 ] ); then
       if [[ -z "$_lto_mode" || ! "$_lto_mode" =~ ^(no|thin|full)$ ]]; then
         plain "Would you like to enable Clang Link Time Optimizations (LTO) ? It may improve the performance of the kernel."
         warning "This is currently experimental and might result in an unbootable kernel - Not recommended"
@@ -452,7 +455,7 @@ _tkg_srcprep() {
   elif [ "$_basever" = "57" ]; then
     _outdated="outdated_versions/"
     _patch_name="enable_additional_cpu_optimizations_for_gcc_v10.1%2B_kernel_v5.7"
-  elif (( 58 <= "$_basever" &&  "$_basever" <= 514 )); then
+  elif (( 58 <= "$_basever" &&  "$_basever" <= 514 )) && [[ "$_basever" != 6* ]]; then
     _patch_name="more-uarches-for-kernel-5.8-5.14"
   elif [[ "$_basever" =~ ^(515|516)$ ]]; then
     _patch_name="more-uarches-for-kernel-5.15-5.16"
@@ -460,16 +463,13 @@ _tkg_srcprep() {
     _patch_name="more-uarches-for-kernel-5.17%2B"
   fi
 
-  if [ "$_basever" != "60" ]; then
-    wget -O "${_patch_location}/${_patch_name}.patch" "https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/master/${_outdated}${_patch_name}.patch" || true
-    tkgpatch="${_patch_location}/${_patch_name}.patch"
-    if [ -e "$tkgpatch" ]; then
-      _msg="Applying graysky's cpu opts patch" && _tkg_patcher
-    else
-      msg2 "Couldn't find graysky's cpu opts patch for this version"
-    fi
+
+  wget -O "${_patch_location}/${_patch_name}.patch" "https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/master/${_outdated}${_patch_name}.patch" || true
+  tkgpatch="${_patch_location}/${_patch_name}.patch"
+  if [ -e "$tkgpatch" ]; then
+    _msg="Applying graysky's cpu opts patch" && _tkg_patcher
   else
-    _processor_opt="generic"
+    msg2 "Couldn't find graysky's cpu opts patch for this version"
   fi
 
   # PREEMPT_RT patch
@@ -653,7 +653,19 @@ _tkg_srcprep() {
         curl "https://raw.githubusercontent.com/hamadmarri/TT-CPU-Scheduler/master/patches/${_basekernel}/high-hz.patch" > "$srcdir"/tt_high_hz.patch
         tkgpatch="$srcdir/tt_high_hz.patch" && _tkg_patcher
       fi
-    fi 
+    fi
+  elif [ "${_cpusched}" = "bore" ]; then
+    _msg="Applying BORE patch"
+    if [ "$_basever" = "518" ]; then
+      _bore_suffix="-sched"
+    fi
+    if [ "${_distro}" = "Void" ]; then
+      curl "https://raw.githubusercontent.com/CachyOS/kernel-patches/master/${_basekernel}/sched/0001-bore$_bore_suffix.patch" > "$wrksrc"/0001-bore.patch
+      tkgpatch="$wrksrc/0001-bore.patch" && _tkg_patcher
+    else
+      curl "https://raw.githubusercontent.com/CachyOS/kernel-patches/master/${_basekernel}/sched/0001-bore$_bore_suffix.patch" > "$srcdir"/0001-bore.patch
+      tkgpatch="$srcdir/0001-bore.patch" && _tkg_patcher
+    fi
   elif [ "${_cpusched}" = "cfs" ]; then
     _msg="Applying Glitched CFS patch"
     tkgpatch="$srcdir/0003-glitched-cfs.patch" && _tkg_patcher
@@ -702,8 +714,8 @@ _tkg_srcprep() {
   if [ "$_basever" = "54" ] || [ "$_basever" = "59" ]; then
     scripts/config --set-val "RCU_BOOST_DELAY" "0"
   fi
-  _disable "NTP_PPS" "CPU_FREQ_DEFAULT_GOV_PERFORMANCE_NODEF" "ZSWAP_COMPRESSOR_DEFAULT_LZO" "PROFILE_ALL_BRANCHES" "CONTEXT_TRACKING_FORCE"
-  _enable "CRYPTO_LZ4" "CRYPTO_LZ4HC" "LZ4_COMPRESS" "LZ4HC_COMPRESS" "ZSWAP_COMPRESSOR_DEFAULT_LZ4" "CMDLINE_BOOL" "BLK_DEV_LOOP" "X86_AMD_PSTATE" "AMD_PINCTRL"
+  _disable "NTP_PPS" "CPU_FREQ_DEFAULT_GOV_PERFORMANCE_NODEF" "ZSWAP_COMPRESSOR_DEFAULT_LZO" "PROFILE_ALL_BRANCHES"
+  _enable "CRYPTO_LZ4" "CRYPTO_LZ4HC" "LZ4_COMPRESS" "LZ4HC_COMPRESS" "ZSWAP_COMPRESSOR_DEFAULT_LZ4" "CMDLINE_BOOL" "BLK_DEV_LOOP" "X86_AMD_PSTATE" "AMD_PINCTRL" "CONTEXT_TRACKING_FORCE"
   _disable "DEBUG_FORCE_FUNCTION_ALIGN_64B"
   scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "lz4"
   scripts/config --set-str "CMDLINE" "${_custom_commandline}"
@@ -721,7 +733,7 @@ _tkg_srcprep() {
     fi
   fi
   # Clang LTO
-  if [ "$_compiler_name" = "-llvm" ] && [ $_basever -ge 512 ]; then
+  if [ "$_compiler_name" = "-llvm" ] && ( [[ "$_basever" = 6* ]] || [ $_basever -ge 512 ] ); then
     if [ "$_lto_mode" = "full" ]; then
       _enable LTO_CLANG_FULL
       _disable LTO_CLANG_THIN
@@ -871,6 +883,8 @@ _tkg_srcprep() {
     # BMQ default config
     _enable "SCHED_ALT" "SCHED_BMQ"
     _disable "SCHED_PDS"
+  elif [ "${_cpusched}" = "bore" ]; then
+    _enable "SCHED_BORE"
   fi
 
   if [[ "${_cpusched}" =~ ^(muqss|pds|bmq|upds)$ ]]; then
@@ -1005,11 +1019,17 @@ _tkg_srcprep() {
       _disable "CC_OPTIMIZE_HARDER"
     fi
   elif [ "$_compileroptlevel" = "2" ]; then
-    _disable "CC_OPTIMIZE_FOR_PERFORMANCE"
-    if [ "$_basever" != "54" ]; then
-      _enable "CC_OPTIMIZE_FOR_PERFORMANCE_O3"
+    if [[ "$_basever" = 6* ]]; then
+      tkgpatch="$srcdir/0013-optimize_harder_O3.patch"
+      _msg="Patching O3 optimization"
+      _tkg_patcher
     else
-      _enable "CC_OPTIMIZE_HARDER"
+      _disable "CC_OPTIMIZE_FOR_PERFORMANCE"
+      if [ "$_basever" != "54" ]; then
+        _enable "CC_OPTIMIZE_FOR_PERFORMANCE_O3"
+      else
+        _enable "CC_OPTIMIZE_HARDER"
+      fi
     fi
   elif [ "$_compileroptlevel" = "3" ]; then
     _disable "CC_OPTIMIZE_FOR_PERFORMANCE"
@@ -1075,6 +1095,7 @@ _tkg_srcprep() {
     ["upds"]="3"
     ["cfs"]="3"
     ["bmq"]="3"
+    ["bore"]="3"
   )
 
   if [[ -n "$_timer_freq" && ! "${_avail_timer_frequencies[*]}" =~ "$_timer_freq" ]]; then
@@ -1155,7 +1176,7 @@ _tkg_srcprep() {
     _disable "NO_HZ_FULL_NODEF" "NO_HZ_IDLE" "NO_HZ_FULL" "NO_HZ" "NO_HZ_COMMON" "VIRT_CPU_ACCOUNTING_GEN"
     _enable "HZ_PERIODIC" "TICK_CPU_ACCOUNTING"
   elif [ "$_tickless" = "1" ]; then
-    _disable "HZ_PERIODIC" "NO_HZ_IDLE" "CONTEXT_TRACKING_FORCE" "TICK_CPU_ACCOUNTING"
+    _disable "HZ_PERIODIC" "NO_HZ_IDLE" "TICK_CPU_ACCOUNTING"
     _enable "NO_HZ_FULL_NODEF" "NO_HZ_FULL" "NO_HZ" "NO_HZ_COMMON" "CONTEXT_TRACKING" "VIRT_CPU_ACCOUNTING_GEN"
   else
     _disable "NO_HZ_FULL_NODEF" "HZ_PERIODIC" "NO_HZ_FULL" "TICK_CPU_ACCOUNTING"
@@ -1477,7 +1498,7 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     fi
     # Workaround for: https://github.com/Tk-Glitch/PKGBUILDS/issues/404.
     # Long live #404!
-    _disable "GPIO_BT8XX" "SND_SE6X"
+    _disable "GPIO_BT8XX" "SND_SE6X" "SENSORS_ADM1021" "SENSORS_MAX6642" "SENSORS_ASUS_WMI_EC"
 
     make LSMOD=$_modprobeddb_db_path localmodconfig ${llvm_opt}
   fi
